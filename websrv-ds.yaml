@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: websrv-ds
+  labels:
+    k8s-app: websrv-ds
+spec:
+  selector:
+    matchLabels:
+      name: websrv-ds
+  template:
+    metadata:
+      labels:
+        name: websrv-ds
+    spec:
+      tolerations:
+      # this toleration is to have the daemonset runnable on master nodes
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      containers:
+      - name: nginx
+        image: quay.io/openshifttest/nginx-alpine
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      terminationGracePeriodSeconds: 30
